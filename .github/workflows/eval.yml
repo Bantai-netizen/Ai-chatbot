@@ -1,0 +1,56 @@
+name: Evaluation
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 3 * * *"  # daily at 03:30 UTC
+
+env:
+  API_BASE_URL: ${{ secrets.API_BASE_URL }} # optional, defaults to Vercel deployment URL
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Prepare eval prompts
+        run: |
+          mkdir -p tests
+          if [ ! -f tests/eval-prompts.json ]; then
+            cat > tests/eval-prompts.json << 'JSON'
+            {
+              "concept": [
+                "What is the core concept behind ACQ advisory routing?",
+                "How should I prioritize course vs mindset when learning?",
+                "Explain the strategy for handling objections from training.",
+                "Summarize module 3 key takeaways.",
+                "What is the recommended cadence for implementation?"
+              ],
+              "implementation": [
+                "How do I implement the course framework in my situation?",
+                "Outline steps for applying the lesson to client discovery.",
+                "How do I structure my calendar to execute the plan?",
+                "Provide examples of successful implementations.",
+                "What is the troubleshooting path if stuck?"
+              ],
+              "mindset": [
+                "What belief change is required?",
+                "How to stay motivated during setbacks?",
+                "What mindset shifts prevent procrastination?",
+                "How to handle fear of rejection?",
+                "What reflective worksheet should I use?"
+              ]
+            }
+            JSON
+          fi
+
+      - name: Run evaluation placeholder
+        run: |
+          echo "Eval workflow scaffolded. Implementation will call /api/advise and collect metrics."

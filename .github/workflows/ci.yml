@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verify repo structure
+        run: |
+          test -d frontend
+          test -d api
+          test -d scripts
+          test -d content
+          test -d .github/workflows
+          test -f vercel.json
+          echo "Repo structure verified."
+
+      - name: Lint placeholder (frontend)
+        run: |
+          echo "No frontend code yet. Placeholder lint check passed."
+
+      - name: Lint placeholder (api)
+        run: |
+          echo "No API code yet. Placeholder lint check passed."
+
+      - name: Run smoke tests placeholders
+        run: |
+          echo "Smoke tests will be added when endpoints are implemented."
