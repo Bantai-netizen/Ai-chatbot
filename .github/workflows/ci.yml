@@ -33,14 +33,11 @@ jobs:
           test -f vercel.json
           echo "Repo structure verified."
 
-      - name: Lint placeholder (frontend)
+      - name: Install smoke test deps
         run: |
-          echo "No frontend code yet. Placeholder lint check passed."
+          npm init -y
+          npm install esbuild-register
 
-      - name: Lint placeholder (api)
+      - name: Run smoke tests
         run: |
-          echo "No API code yet. Placeholder lint check passed."
-
-      - name: Run smoke tests placeholders
-        run: |
-          echo "Smoke tests will be added when endpoints are implemented."
+          node scripts/smoke_tests.js
