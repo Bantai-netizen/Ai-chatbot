@@ -1,0 +1,45 @@
+name: Ingest KB
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * *"  # daily at 03:00 UTC
+
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install sentence-transformers psycopg[binary] tqdm
+
+      - name: Show content files
+        run: |
+          echo "Course transcripts:"
+          ls -la content/course-transcripts || true
+          echo "Mindset transcripts:"
+          ls -la content/mindset/transcripts || true
+          echo "Mindset worksheets:"
+          ls -la content/mindset/worksheets || true
+          echo "Call transcripts:"
+          ls -la content/calls || true
+
+      - name: Run ingestion script
+        run: |
+          if [ -f scripts/ingest.py ]; then
+            python scripts/ingest.py
+          else
+            echo "Ingestion script not yet implemented. Placeholder run."
+          fi
